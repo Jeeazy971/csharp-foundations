@@ -1,24 +1,41 @@
-﻿const string MuseumName = "Nova Museum";
-const int MaxDailyVisitors = 1200;
-const char DefaultGate = 'A';
-int currentVisitors = 350;
-bool gateOpen = true;
+﻿int parcelCount = 145;
+bool centerOpen = true;
+char sectorLetter = 'D';
+string centerCode = "CTR-08";
+long totalProcessed = 5000000000L;
 
-Console.WriteLine(MuseumName);
-Console.WriteLine(MaxDailyVisitors);
-Console.WriteLine(DefaultGate);
-Console.WriteLine(currentVisitors);
-Console.WriteLine(gateOpen);
+const string ApplicationName = "ParcelTrack";
+const int MaxDailyParcels = 2500;
 
-currentVisitors = 375;
-Console.WriteLine(currentVisitors);
+Console.WriteLine(parcelCount);
+Console.WriteLine(centerOpen);
+Console.WriteLine(sectorLetter);
+Console.WriteLine(centerCode);
+Console.WriteLine(totalProcessed);
+Console.WriteLine(ApplicationName);
+Console.WriteLine(MaxDailyParcels);
 
-/* 
-	1. Nom officiel du musée fixé dans l'application = une constante car il ne changera pas 
-	2. Nombre actuel de visiteurs présents = sans const car il peut varier
-	3. Nombre maximal de visiteurs autorisés par jour, fixé à 1200 = const car c'est la capacité maximal
-	4. Porte actuellement ouverte ou fermée = sans const car il peut etre ouverte ou fermé selon la capacité maximale atteinte ou non
-	5. Lettre fixe utilisée comme porte d'entrée par défaut = const car la porte par defaut ne change aps de lettre
-	
-	La raison de l'erreur dans la compilation est due au fait que const est immuable, donc à la compilation la valeur ne peut pas changer.
+/*
+type C# :
+type valeur ou type référence :
+
+parcelCount = int / valeur
+centerOpen = bool / valeur
+sectorLetter = char / valeur
+centerCode = string / référence
+totalProcessed = long / valeur
+ApplicationName = string / référence
+MaxDailyParcels = int / valeur
+
+Pourquoi centerCode, qui contient "CTR-08", est-il un type référence ? Car c'est un string et un string fait référence a un objet
+Pourquoi parcelCount est-il un type valeur ? car c'est un int 
+Est-ce que const string ApplicationName devient un type valeur parce qu’il utilise const ? non car le type string est toujours référence a un objet
+Est-ce que const int MaxDailyParcels cesse d’être un type valeur parce qu’il est constant ? non comme la précédente question c'est toujours pareil
+
+
+Pourquoi on évite pour l’instant de dire
+type valeur = stack
+type référence = heap ?
+
+parce que selon le contexte ce n'est pas totalement vrai, d'où le fait que l'on ne dis pas concretement ça
 */
