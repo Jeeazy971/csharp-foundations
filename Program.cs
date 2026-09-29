@@ -1,111 +1,247 @@
-﻿int originalCount = 18;
-int copiedCount = originalCount;
+﻿int pendingRequests = 14;
+int copiedRequests = pendingRequests;
+
+copiedRequests = 21;
+
+Console.WriteLine(pendingRequests);
+Console.WriteLine(copiedRequests);
+
+string primaryCode = "SUP-14";
+string secondaryCode = primaryCode;
+
+Console.WriteLine(primaryCode);
+Console.WriteLine(secondaryCode);
+
+secondaryCode = "SUP-21";
+
+Console.WriteLine(primaryCode);
+Console.WriteLine(secondaryCode);
 
 /*
-    1. Copie de valeur
+    Partie B — Mémoire et sémantique
 
-    Ce qui a été copié de originalCount vers copiedCount est la valeur 18,
+    1. Qu’est-ce qui est copié ?
+
+    La valeur contenue dans pendingRequests est copiée dans copiedRequests,
     car int est un type valeur.
 
-    Modifier ensuite copiedCount ne modifie pas originalCount,
-    car les deux variables possèdent désormais leur propre valeur.
+    2. Pourquoi serait-il incorrect de conclure simplement :
+
+       int = stack
+
+    Parce que "type valeur" décrit la sémantique du type et non un emplacement
+    mémoire obligatoire.
+
+    Une valeur de type int peut notamment être stockée directement dans un objet
+    situé dans le managed heap. Son emplacement dépend donc du contexte et des
+    choix du runtime/JIT.
+
+
+    Pour :
+
+        string primaryCode = "SUP-14";
+        string secondaryCode = primaryCode;
+
+    3. Qu’est-ce qui est copié ?
+
+    La référence contenue dans primaryCode est copiée dans secondaryCode.
+    L’objet "SUP-14" n’est pas cloné.
+
+    4. Combien de variables avons-nous juste après l’affectation ?
+
+    Deux variables :
+    - primaryCode
+    - secondaryCode
+
+    5. Combien d’objets "SUP-14" sont nécessaires pour expliquer le comportement ?
+
+    Un seul objet suffit conceptuellement :
+
+        primaryCode ────┐
+                        ▼
+                     "SUP-14"
+                        ▲
+        secondaryCode ──┘
+
+    6. Pourquoi "string = heap" est-il trop imprécis ?
+
+    Parce qu’il faut distinguer la variable, la référence qu’elle contient
+    et l’objet référencé.
+
+        variable
+           │
+           │ contient
+           ▼
+        référence
+           │
+           │ permet d’accéder à
+           ▼
+        objet
+
+    Ici :
+    - primaryCode est une variable ;
+    - elle contient une référence ;
+    - cette référence permet d’accéder à l’objet string "SUP-14".
+
+    Dire simplement "string = heap" mélange donc la sémantique du type
+    avec son stockage mémoire.
 */
 
-copiedCount = 27;
-
-Console.WriteLine(originalCount);
-Console.WriteLine(copiedCount);
-
-
-string originalCode = "MED-41";
-string copiedCode = originalCode;
-
 /*
-    2. Copie de référence
-
-    Ce qui est copié de originalCode vers copiedCode est la référence,
-    et non une copie de l'objet.
+    Partie C — Schéma mémoire conceptuel
 
     Juste après :
 
-        string copiedCode = originalCode;
+        string secondaryCode = primaryCode;
 
-    les deux variables peuvent donc référencer le même objet :
+    CONTEXTE D'EXÉCUTION                 MANAGED HEAP
 
-        originalCode ──┐
-                       ▼
-                    "MED-41"
-                       ▲
-        copiedCode ────┘
+    primaryCode
+         │
+         └──────────────────────────────► "SUP-14"
+                                            ▲
+                                            │
+    secondaryCode ──────────────────────────┘
+
+
+    Après :
+
+        secondaryCode = "SUP-21";
+
+    CONTEXTE D'EXÉCUTION                 MANAGED HEAP
+
+    primaryCode ─────────────────────────► "SUP-14"
+
+    secondaryCode ───────────────────────► "SUP-21"
+
+
+    Il s’agit d’une réaffectation de secondaryCode :
+    la variable reçoit une nouvelle référence.
+
+    L’objet "SUP-14" n’a pas été modifié.
 */
 
-Console.WriteLine(originalCode);
-Console.WriteLine(copiedCode);
-
-
-copiedCode = "MED-99";
-
 /*
-    3. Réaffectation
+    Partie D — Garbage Collector
 
-    copiedCode = "MED-99";
+    Premier scénario :
 
-    est une réaffectation de copiedCode.
+        GC ROOT
+           │
+           ▼
+        Objet A
+           │
+           ▼
+        Objet B
 
-    L'objet "MED-41" n'a pas été muté.
 
-    Après cette ligne :
+        Objet X
 
-        originalCode ───> "MED-41"
+    7. Quels objets sont accessibles depuis la root ?
 
-        copiedCode   ───> "MED-99"
+    Objet A et Objet B.
 
-    Les deux variables référencent donc maintenant des objets différents.
+    8. Quel objet est potentiellement éligible à la collecte ?
+
+    Objet X, car aucune chaîne de références partant d’une GC Root
+    ne permet de l’atteindre.
+
+    9. Est-il forcément collecté immédiatement ?
+
+    Non.
+
+    Lorsqu’un objet devient inaccessible, il devient éligible à la collecte,
+    mais le Garbage Collector ne s’exécute pas après chaque objet devenu
+    inaccessible.
+
+    Le runtime choisit quand effectuer une collecte.
+
+
+    Deuxième scénario :
+
+        GC ROOT
+           │
+           ▼
+        Objet A
+           │
+           ▼
+        Objet B
+           │
+           ▼
+        Objet X
+
+    10. Objet X est-il toujours éligible à la collecte ?
+
+    Non.
+
+    Objet X est maintenant accessible indirectement depuis la GC Root :
+
+        GC ROOT → Objet A → Objet B → Objet X
+
+    Tant que cette chaîne existe, le GC doit considérer Objet X comme vivant.
 */
 
-Console.WriteLine(originalCode);
-Console.WriteLine(copiedCode);
+/*
+    Partie E — Cas subtil
 
+        GC ROOT
+           │
+           ▼
+        Objet A
+
+
+        Objet X ─────► Objet Y
+           ▲             │
+           └─────────────┘
+
+    11. Le GC peut-il considérer X et Y comme inaccessibles ?
+
+    Oui.
+
+    12. Pourquoi le fait qu’ils se référencent entre eux ne suffit-il pas
+        à les maintenir vivants ?
+
+    Parce que le GC ne vérifie pas simplement si un objet possède une référence.
+
+    Il vérifie si l’objet peut être atteint directement ou indirectement
+    depuis une GC Root.
+
+    Ici, aucune chaîne de références ne relie une GC Root à X ou Y.
+    Les deux objets sont donc inaccessibles et peuvent devenir éligibles
+    à la collecte.
+*/
 
 /*
-    4. Mutation d'un objet partagé
+    Partie F — Définitions
 
-    Situation initiale :
+    Stack =
+    pile d’exécution utilisée notamment pour suivre les appels en cours
+    et leurs contextes d’exécution. Elle ne définit pas ce qu’est un type valeur.
 
-        variableA ───┐
-                     ▼
-                OBJET PARTAGÉ
-                état = "Actif"
-                     ▲
-        variableB ───┘
+    Managed Heap =
+    zone de mémoire gérée par .NET dans laquelle sont notamment stockés
+    les objets managés.
 
-    - Il y a 2 variables.
-    - Il y a 1 objet partagé.
+    Garbage Collector =
+    mécanisme du runtime .NET qui identifie les objets managés encore accessibles
+    et peut récupérer la mémoire de ceux devenus inaccessibles.
 
-    Si une opération effectuée via variableB modifie l'état de l'objet
-    de "Actif" vers "Suspendu", c'est l'OBJET qui est muté.
+    Objet accessible =
+    objet qui peut être atteint directement ou indirectement depuis une GC Root.
 
-    variableB n'est pas réaffectée.
-    variableA et variableB référencent toujours le même objet.
-
-    variableA voit donc également l'état "Suspendu", car elle permet
-    d'accéder au même objet qui a été modifié.
+    Objet éligible à la collecte =
+    objet qui n’est plus accessible depuis aucune GC Root et dont la mémoire
+    pourra être récupérée lors d’une future collecte.
 
 
-    5. Définitions
+    Rappel principal :
 
-    Copie de valeur =
-    copier la valeur contenue dans une variable vers une autre variable.
-    Les deux variables possèdent ensuite des valeurs indépendantes.
+        type valeur / type référence
+                    ≠
+              stack / heap
 
-    Copie de référence =
-    copier la référence vers un objet dans une autre variable.
-    Les deux variables peuvent alors référencer le même objet.
+    "Valeur / référence" décrit principalement la sémantique des types.
 
-    Réaffectation =
-    donner à une variable une nouvelle valeur ou une nouvelle référence.
-
-    Mutation =
-    modifier l'état d'un objet existant sans remplacer cet objet
-    par un autre dans la variable.
+    "Stack / heap" concerne la manière dont les données sont stockées
+    et utilisées pendant l’exécution.
 */
