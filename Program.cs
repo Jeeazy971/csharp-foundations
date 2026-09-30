@@ -1,143 +1,213 @@
-﻿var eventId = 120;
-object eventData = 120;
-dynamic externalData = 120;
+﻿// int importedCount = 125;
+// long archivedCount = importedCount;
 
-Console.WriteLine(eventId);
-Console.WriteLine(eventData);
-Console.WriteLine(externalData);
+// Console.WriteLine(importedCount);
+// Console.WriteLine(archivedCount);
 
 /*
 
-1. Quel est le type réel de eventId après l'inférence ? il est de type int
-
-2. Quel est le type déclaré de eventData ? c'est de type object
-
-3. Quel mécanisme se produit avec :
-   object eventData = 120;
-   sachant que int est un type valeur ? la variable prend le type object et le type int de la valeur est boxé
-
-4. Quelle est la particularité de externalData par rapport
-   aux vérifications du compilateur ? c'est que certianes verification a la compilation sont reporté et qu'il sont verifié durant le runtime 
+1. Quel est le type de importedCount ? Il est de type int
+2. Quel est le type de archivedCount ? Il est de type long
+3. La conversion int → long est-elle implicite ou explicite ? implicite
+4. Pourquoi aucun cast n'est nécessaire ici ? Car il a une plus grande plage de valeur par rapport a int donc ça peut fonctionner
 
 */
 
-eventData = "EVT-120";
-externalData = "EXT-120";
+// long storedCount = 80L;
+// int activeCount = (int)storedCount;
 
-Console.WriteLine(eventData);
-Console.WriteLine(externalData);
+// Console.WriteLine(storedCount);
+// Console.WriteLine(activeCount);
 
-eventData = true;
-externalData = true;
+/*
+5. Quelle conversion est effectuée ? C'est une conversion explicite
+6. Pourquoi faut-il écrire (int) ? car on lui dit de convertir la valeur en int même si c'est risqué
+7. Est-ce que le fait d'écrire (int) garantit que toute valeur long
+   sera toujours représentable correctement en int ? Non. Si la valeur du long dépasse ce qu'un int peut représenter,
+il peut y avoir une perte d'information ou un résultat incorrect.
+ */
+ 
+// string batchSizeText = "64";
 
-Console.WriteLine(eventData);
-Console.WriteLine(externalData);
+// int batchSize = int.Parse(batchSizeText);
+
+// Console.WriteLine(batchSizeText);
+// Console.WriteLine(batchSize);
 
 /*
 
-5. Est-ce que eventData a changé de type déclaré ? non mais la valeur de type oui
-6. Est-ce que externalData peut recevoir ces différentes valeurs ?
-	Oui. Une variable dynamic peut recevoir des valeurs de différents types.
-	Sa particularité est surtout que certaines vérifications liées aux opérations
-	sont reportées au runtime.
-7. Pourquoi var eventId ne fonctionne-t-il pas de la même manière ? Car l'inférence du type se fait à la compilation
+8. Quelle donnée entre dans int.Parse ? "64"
+9. Quel est son type ? string
 
+10. Quelle donnée ressort de int.Parse ? 64
+11. Quel est son type ? int
+
+12. Dans quelle variable le résultat est-il stocké ? dans batchSize
+
+13. Après l'appel à Parse, batchSize peut-il être utilisé
+    comme une variable int normale ? oui absolument
+*/
+
+// int confirmedBatchSize = batchSize;
+
+// Console.WriteLine(confirmedBatchSize);
+
+/*
+
+14. Est-ce que confirmedBatchSize reçoit "64" ou 64 ? 64
+15. Pourquoi ? car batchSize est de type int apres conversion donc on copie la valeur de batchSize dans confirmedBatchSize
+
+*/
+
+// string priorityText = "7";
+
+// bool priorityParsed = int.TryParse(priorityText, out int priority);
+
+// Console.WriteLine(priorityParsed);
+// Console.WriteLine(priority);
+
+/*
+
+16. Quelle est l'entrée de TryParse ? priorityText
+
+17. Quelles sont les DEUX informations produites ? true et 7
+
+18. Dans quelle variable se trouve le booléen ? priorityParsed
+
+19. Dans quelle variable se trouve la valeur convertie ? priority
+
+20. Quelle valeur prévois-tu pour priorityParsed ? true
+
+21. Quelle valeur prévois-tu pour priority ? 7
+
+*/
+
+// int validatedPriority = priority;
+
+// Console.WriteLine(validatedPriority);
+
+/*
+
+22. Pourquoi peut-on utiliser priority après l'appel à TryParse ? car c'est lui qui a la valeur converti avec out
+
+23. Est-ce que priority est une variable interne cachée dans TryParse ? non 
+
+24. Que signifie ici :
+    out int priority = la variable initialisé permet de la reutiliser ailleurs dans le programme et qu'elle n'est pas interne a la méthode Parse
+	
+*/
+
+// string invalidCode = "ABC";
+
+// bool invalidCodeParsed = int.TryParse(invalidCode, out int numericCode);
+
+// Console.WriteLine(invalidCodeParsed);
+// Console.WriteLine(numericCode);
+
+/*
+
+Avant d’exécuter, prédis :
+invalidCodeParsed = false
+numericCode = 0
+
+Puis réponds :
+25. Est-ce que l'échec provoque ici une exception ? Non
+
+26. Peut-on conclure que l'utilisateur avait réellement fourni
+    la valeur numérique 0 ? Non, juste c'est vu que la conversion n'est pas possible alors la valeur est de 0
+
+27. Quelle variable faut-il regarder pour savoir si numericCode
+    représente réellement une conversion réussie ? invalidCodeParsed
 */
 
 
 /*
 
-Partie C — Boxing
-Observe :
+Partie H — Parse ou TryParse ?
+Pour chacun des scénarios, choisis Parse ou TryParse et explique pourquoi.
+28. Une chaîne interne au programme que tu considères garantie valide. Parse, parce-que je sais que le contenu est sur et valide
 
-*/
+29. Une valeur provenant d'une saisie utilisateur. TryParse, car je ne sais ce que j'aurai en entré
 
-// object firstPayload = 25;
-// object secondPayload = "EVT-25";
+30. Une donnée texte provenant d'un fichier dont le contenu
+    peut être incorrect. TryParse, car la donnée textuelle ne me garantie pas le contenu sera une valeur numerique
 
-
-/*
-Réponds sans modifier le code :
-8. Sur quelle ligne y a-t-il du boxing ? firstPayload
-9. Pourquoi ? car le type est une valeur int 
-10. Pourquoi l'autre ligne ne nécessite-t-elle pas de boxing ?
-	Parce que string est un type référence. La référence vers l'objet string
-	peut être affectée à une variable object sans boxing.
+31. Une donnée dont l'échec de conversion est normalement possible
+    et doit être traité comme un cas normal. TryParse
+	
 */
 
 /*
 
-Partie D — Comparaison mentale
-Pour chacune des lignes suivantes, indique ce que tu dois penser immédiatement :
+Partie I — Ton modèle mental final
+Complète avec tes mots :
+Conversion implicite = C'est d'assigner la valeur a une variable typé ex: 
+int number1 = 1;
+long numberLong = number1;
+
+Conversion explicite / cast = c'est dire que le type sera converti avec des risque. ex :
+long monNum = 148L
+int autreNum = (int)monNum;
+
+Parse = méthode qui interprète un texte et retourne directement la valeur convertie.
+Si le texte est invalide, une exception peut être déclenchée.
+entrée = "7"
+sortie = 7
+risque = risque d'erreur si ce n'est pas possible
+
+TryParse = méthode qui tente la conversion sans utiliser une exception pour un échec normal.
+Elle retourne un booléen et écrit la valeur obtenue dans la variable out.
+entrée = la variable avec sont type 
+sortie 1 = le resultat booleen si la convesion est reussi ou non
+sortie 2 = le valeur converti si reussi ou non
+
+out int value = variable de mon code appelant dans laquelle TryParse écrit le résultat.
+Elle reste utilisable après l'appel.
+
+Après un TryParse réussi, la valeur convertie = peut etre reutiliser dans le programme grace à out
+Après un TryParse échoué, je dois d'abord regarder = le booléen retourné par TryParse.
 */
 
-// var first = 50;
-// object second = 50;
-// dynamic third = 50;
+int currentItems = 36;
 
-/*
-Complète :
-first :
-type déclaré/réel = int
-boxing = non
-vérification principale = compilation
+long totalItems = currentItems;
 
-second :
-type déclaré = object
-contenu initial = int
-boxing = oui
-vérification principale = compilation
+long storedLimit = 72L;
 
-third :
-particularité = certaines verifications reporté au runtime
-certaines vérifications = runtime
+int activeLimit = (int)storedLimit;
 
-*/
+string batchSizeText = "128";
 
-/*
+int batchSize = int.Parse(batchSizeText);
 
-Partie E — Cas professionnel
-Une donnée métier représente toujours un nombre de places disponibles.
-Tu as trois possibilités :
-*/
+int confirmedBatchSize = batchSize;
 
-// int availableSeats = 40;
-// object availableSeats = 40;
-// dynamic availableSeats = 40;
+string retryText = "5";
 
-/*
-Réponds :
-11. Laquelle choisirais-tu normalement dans du code métier ? je choisirai int
-12. Pourquoi object serait-il trop général ? car je pourrait perdre la precision de ce qui est contenue
-13. Pourquoi dynamic serait-il risqué sans besoin réel ? Car le garde de fou de la compilation est perdue et le risque d'erreur durant le runtime se verrai tardivement
-*/
+bool retryParsed = int.TryParse(retryText, out int retryCount);
+
+int validatedRetryCount = retryCount;
+
+string invalidTimeoutText = "TIMEOUT";
+
+bool timeoutParsed = int.TryParse(invalidTimeoutText, out int timeout);
+
+Console.WriteLine(currentItems);
+Console.WriteLine(totalItems);
+Console.WriteLine(storedLimit);
+Console.WriteLine(activeLimit);
+Console.WriteLine(batchSize);
+Console.WriteLine(confirmedBatchSize);
+Console.WriteLine(retryParsed);
+Console.WriteLine(retryCount);
+Console.WriteLine(validatedRetryCount);
+Console.WriteLine(timeoutParsed);
+Console.WriteLine(timeout);
 
 /*
 
-Partie F — Ton résumé
-Complète avec tes propres mots :
-var =
-le compilateur déduit le type à partir de la valeur d'initialisation.
-Ce type est ensuite fixé.
+1. Pourquoi ne faut-il pas considérer timeout = 0 comme une conversion réussie ? TryParse a échoué (timeoutParsed == false) et, pour un int, la variable de sortie vaut alors 0. Ce 0 ne prouve donc pas que l’entrée représentait réellement le nombre zéro.
 
-object =
-la variable est déclarée de type object et peut recevoir des valeurs
-de différents types. Un type valeur comme int est boxé lorsqu'il est
-stocké dans object, alors qu'un type référence comme string ne l'est pas.
-
-dynamic =
-la variable est déclarée dynamic. Elle peut recevoir des valeurs de
-différents types et certaines vérifications liées aux opérations sont
-reportées au runtime, ce qui peut faire apparaître certaines erreurs
-plus tardivement.
-
-Je préfère un type précis quand =
-je connais le type attendu par mon domaine.
-
-J'utilise dynamic seulement quand =
-le besoin est réellement dynamique et le justifie.
-
-object avec un int = boxing
-object avec un string = non boxing
+2. Quelle variable permet de savoir si timeout est réellement exploitable ? timeoutParsed
 
 */
