@@ -1,28 +1,34 @@
-﻿decimal subscriptionPrice = 89.95m;
-double serverRoomTemperature = 21.7;
-float renderScale = 1.25f;
+﻿string rawReference = "  ord_458  ";
+string removeSpaceRawReference = rawReference.Trim();
+string replaceRawReference = removeSpaceRawReference.Replace("_", "-");
+string cleanRawReference = replaceRawReference.ToUpper();
 
-Console.WriteLine(subscriptionPrice);
-Console.WriteLine(serverRoomTemperature);
-Console.WriteLine(renderScale);
+bool isValidPrefix = cleanRawReference.StartsWith("ORD-");
+bool containsRawReference = cleanRawReference.Contains("458");
 
-// decimal invoiceTotal = 49.90;
-// float opacity = 0.75;
+int cleanRawReferenceLength = cleanRawReference.Length;
+string message = $"Reference {cleanRawReference} - Valid prefix: {isValidPrefix}";
+
+// string status = "pending";
+// status.ToUpper();
+// Console.WriteLine(status);
 
 /*
 
-1. Pourquoi la première ligne pose-t-elle problème ? car elle est compris comme si c'etait un double
-   Quelle écriture utiliserais-tu ? decimal invoiceTotal = 49.90m;
+1. Qu'afficherait ce code ? "pending"
 
-2. Pourquoi la deuxième ligne pose-t-elle problème ? Car elle est correpond à une valeur de type double 
-   Quelle écriture utiliserais-tu ? float opacity = 0.75f;
+2. Pourquoi ToUpper() n'a-t-il pas modifié status ? car la valeur n'a pas été stocké
 
-3. Pour chacun de tes trois choix principaux,
-   explique en quelques mots pourquoi tu as choisi ce type.
-   
-decimal = adapté aux calculs décimaux, notamment argent / finance
-double  = choix général pour mesures, calculs mathématiques/scientifiques
-float   = surtout quand une API, un format ou un contexte impose/préfère du 32 bits
-   
- */
- 
+donnée brute
+→ Trim = eneleve les espaces vide au debut et a la fin
+→ Replace = change _ en -
+→ ToUpper = ToUpper() retourne une nouvelle chaîne car string est immutable. Comme le résultat n’est pas stocké ou réaffecté à status, status reste "pending".
+→ vérifications = verifie si le contenu recherché est present ou non StartsWith
+→ interpolation = retranscrit le resultat des variables dans le string avec $ et {variable}
+*/
+
+Console.WriteLine(cleanRawReference);
+Console.WriteLine(isValidPrefix);
+Console.WriteLine(containsRawReference);
+Console.WriteLine(cleanRawReferenceLength);
+Console.WriteLine(message);
