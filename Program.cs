@@ -1,28 +1,28 @@
-﻿string referenceOrder = "ORD-204";
-string? deliveryNote = null;
-// string anotherString = "";
-deliveryNote = "Leave at reception";
-string? anotherDeliveryNote = deliveryNote;
+﻿decimal subscriptionPrice = 89.95m;
+double serverRoomTemperature = 21.7;
+float renderScale = 1.25f;
 
-Console.WriteLine(referenceOrder);
-Console.WriteLine(deliveryNote);
-Console.WriteLine(anotherDeliveryNote);
+Console.WriteLine(subscriptionPrice);
+Console.WriteLine(serverRoomTemperature);
+Console.WriteLine(renderScale);
 
-// string customerName = null;
-// string? optionalMessage = null;
-// Console.WriteLine(optionalMessage.Length);
+// decimal invoiceTotal = 49.90;
+// float opacity = 0.75;
 
 /*
 
-1. Pourquoi customerName = null pose-t-il problème alors que le code peut quand même compiler ? Parce qu'il est censé avoir une chaine de manière obligatoire, sauf que ce n'est pos le cas là.
+1. Pourquoi la première ligne pose-t-elle problème ? car elle est compris comme si c'etait un double
+   Quelle écriture utiliserais-tu ? decimal invoiceTotal = 49.90m;
 
-2. Pourquoi optionalMessage.Length est-il dangereux ? Car au runtime il y a une absence de valeur donc il y a echouer et générer une erreur
+2. Pourquoi la deuxième ligne pose-t-elle problème ? Car elle est correpond à une valeur de type double 
+   Quelle écriture utiliserais-tu ? float opacity = 0.75f;
 
-3. Quelle différence métier fais-tu entre :
-   null
-   et
-   ""
+3. Pour chacun de tes trois choix principaux,
+   explique en quelques mots pourquoi tu as choisi ce type.
    
-   null = absence de valeur 
-   "" = valeur existante mais aucun caractères présent dans la string
-*/
+decimal = adapté aux calculs décimaux, notamment argent / finance
+double  = choix général pour mesures, calculs mathématiques/scientifiques
+float   = surtout quand une API, un format ou un contexte impose/préfère du 32 bits
+   
+ */
+ 
