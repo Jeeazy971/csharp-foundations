@@ -1,247 +1,146 @@
-﻿int pendingRequests = 14;
-int copiedRequests = pendingRequests;
+﻿var parcelCount = 12;
+var trackingCode = "PKG-120";
+var isExpress = true;
+var zone = 'B';
+var totalDistance = 450L;
 
-copiedRequests = 21;
-
-Console.WriteLine(pendingRequests);
-Console.WriteLine(copiedRequests);
-
-string primaryCode = "SUP-14";
-string secondaryCode = primaryCode;
-
-Console.WriteLine(primaryCode);
-Console.WriteLine(secondaryCode);
-
-secondaryCode = "SUP-21";
-
-Console.WriteLine(primaryCode);
-Console.WriteLine(secondaryCode);
+Console.WriteLine(parcelCount);
+Console.WriteLine(trackingCode);
+Console.WriteLine(isExpress);
+Console.WriteLine(zone);
+Console.WriteLine(totalDistance);
 
 /*
-    Partie B — Mémoire et sémantique
+    Partie A — Inférence de type
 
-    1. Qu’est-ce qui est copié ?
+    parcelCount = int
+    trackingCode = string
+    isExpress = bool
+    zone = char
+    totalDistance = long
 
-    La valeur contenue dans pendingRequests est copiée dans copiedRequests,
-    car int est un type valeur.
+    Pourquoi totalDistance n'est-il pas un int ?
 
-    2. Pourquoi serait-il incorrect de conclure simplement :
+    Parce que le suffixe L indique au compilateur que 450L est un littéral de type long.
+    Avec var, le compilateur déduit donc que totalDistance est de type long.
 
-       int = stack
-
-    Parce que "type valeur" décrit la sémantique du type et non un emplacement
-    mémoire obligatoire.
-
-    Une valeur de type int peut notamment être stockée directement dans un objet
-    situé dans le managed heap. Son emplacement dépend donc du contexte et des
-    choix du runtime/JIT.
-
-
-    Pour :
-
-        string primaryCode = "SUP-14";
-        string secondaryCode = primaryCode;
-
-    3. Qu’est-ce qui est copié ?
-
-    La référence contenue dans primaryCode est copiée dans secondaryCode.
-    L’objet "SUP-14" n’est pas cloné.
-
-    4. Combien de variables avons-nous juste après l’affectation ?
-
-    Deux variables :
-    - primaryCode
-    - secondaryCode
-
-    5. Combien d’objets "SUP-14" sont nécessaires pour expliquer le comportement ?
-
-    Un seul objet suffit conceptuellement :
-
-        primaryCode ────┐
-                        ▼
-                     "SUP-14"
-                        ▲
-        secondaryCode ──┘
-
-    6. Pourquoi "string = heap" est-il trop imprécis ?
-
-    Parce qu’il faut distinguer la variable, la référence qu’elle contient
-    et l’objet référencé.
-
-        variable
-           │
-           │ contient
-           ▼
-        référence
-           │
-           │ permet d’accéder à
-           ▼
-        objet
-
-    Ici :
-    - primaryCode est une variable ;
-    - elle contient une référence ;
-    - cette référence permet d’accéder à l’objet string "SUP-14".
-
-    Dire simplement "string = heap" mélange donc la sémantique du type
-    avec son stockage mémoire.
-*/
-
-/*
-    Partie C — Schéma mémoire conceptuel
-
-    Juste après :
-
-        string secondaryCode = primaryCode;
-
-    CONTEXTE D'EXÉCUTION                 MANAGED HEAP
-
-    primaryCode
-         │
-         └──────────────────────────────► "SUP-14"
-                                            ▲
-                                            │
-    secondaryCode ──────────────────────────┘
-
-
-    Après :
-
-        secondaryCode = "SUP-21";
-
-    CONTEXTE D'EXÉCUTION                 MANAGED HEAP
-
-    primaryCode ─────────────────────────► "SUP-14"
-
-    secondaryCode ───────────────────────► "SUP-21"
-
-
-    Il s’agit d’une réaffectation de secondaryCode :
-    la variable reçoit une nouvelle référence.
-
-    L’objet "SUP-14" n’a pas été modifié.
-*/
-
-/*
-    Partie D — Garbage Collector
-
-    Premier scénario :
-
-        GC ROOT
-           │
-           ▼
-        Objet A
-           │
-           ▼
-        Objet B
-
-
-        Objet X
-
-    7. Quels objets sont accessibles depuis la root ?
-
-    Objet A et Objet B.
-
-    8. Quel objet est potentiellement éligible à la collecte ?
-
-    Objet X, car aucune chaîne de références partant d’une GC Root
-    ne permet de l’atteindre.
-
-    9. Est-il forcément collecté immédiatement ?
+    Est-ce que l'utilisation de var rend ces variables dynamiques ?
 
     Non.
 
-    Lorsqu’un objet devient inaccessible, il devient éligible à la collecte,
-    mais le Garbage Collector ne s’exécute pas après chaque objet devenu
-    inaccessible.
+    Pourquoi ?
 
-    Le runtime choisit quand effectuer une collecte.
-
-
-    Deuxième scénario :
-
-        GC ROOT
-           │
-           ▼
-        Objet A
-           │
-           ▼
-        Objet B
-           │
-           ▼
-        Objet X
-
-    10. Objet X est-il toujours éligible à la collecte ?
-
-    Non.
-
-    Objet X est maintenant accessible indirectement depuis la GC Root :
-
-        GC ROOT → Objet A → Objet B → Objet X
-
-    Tant que cette chaîne existe, le GC doit considérer Objet X comme vivant.
+    Parce que var demande au compilateur de déduire le type à partir de la valeur
+    d'initialisation. Une fois le type déduit à la compilation, il reste fixé pendant
+    toute la durée de vie de la variable.
 */
 
+parcelCount = 20;
+trackingCode = "PKG-121";
+isExpress = false;
+zone = 'C';
+totalDistance = 700L;
+
+Console.WriteLine(parcelCount);
+Console.WriteLine(trackingCode);
+Console.WriteLine(isExpress);
+Console.WriteLine(zone);
+Console.WriteLine(totalDistance);
+
 /*
-    Partie E — Cas subtil
+    Partie B — Réaffectation
 
-        GC ROOT
-           │
-           ▼
-        Objet A
-
-
-        Objet X ─────► Objet Y
-           ▲             │
-           └─────────────┘
-
-    11. Le GC peut-il considérer X et Y comme inaccessibles ?
+    Ces réaffectations doivent-elles compiler ?
 
     Oui.
 
-    12. Pourquoi le fait qu’ils se référencent entre eux ne suffit-il pas
-        à les maintenir vivants ?
+    Pourquoi ?
 
-    Parce que le GC ne vérifie pas simplement si un objet possède une référence.
+    Parce que chaque variable conserve le type précis déduit lors de son initialisation :
 
-    Il vérifie si l’objet peut être atteint directement ou indirectement
-    depuis une GC Root.
+    parcelCount = int
+    trackingCode = string
+    isExpress = bool
+    zone = char
+    totalDistance = long
 
-    Ici, aucune chaîne de références ne relie une GC Root à X ou Y.
-    Les deux objets sont donc inaccessibles et peuvent devenir éligibles
-    à la collecte.
+    Les nouvelles valeurs sont compatibles avec ces types.
+*/
+
+// Expérience volontaire : cette ligne ne compile pas.
+// parcelCount = "20";
+
+// Erreur observée :
+// error CS0029: Impossible de convertir implicitement le type 'string' en 'int'
+
+/*
+    Partie C — Erreur volontaire
+
+    1. Est-ce une erreur de compilation ou une erreur runtime ?
+
+    C'est une erreur de compilation.
+
+    2. Pourquoi le compilateur refuse-t-il "20" alors que parcelCount
+       a été déclaré avec var ?
+
+    Parce que parcelCount a été inféré comme un int dès sa déclaration.
+    Lui affecter "20" demanderait une conversion de string vers int,
+    et cette conversion n'est pas implicite.
+
+    3. Quel est réellement le type de parcelCount ?
+
+    parcelCount est de type int.
 */
 
 /*
-    Partie F — Définitions
+    Partie D — var ou type explicite ?
 
-    Stack =
-    pile d’exécution utilisée notamment pour suivre les appels en cours
-    et leurs contextes d’exécution. Elle ne définit pas ce qu’est un type valeur.
+    Comparaison :
 
-    Managed Heap =
-    zone de mémoire gérée par .NET dans laquelle sont notamment stockés
-    les objets managés.
+        var retryCount = 3;
 
-    Garbage Collector =
-    mécanisme du runtime .NET qui identifie les objets managés encore accessibles
-    et peut récupérer la mémoire de ceux devenus inaccessibles.
+    et :
 
-    Objet accessible =
-    objet qui peut être atteint directement ou indirectement depuis une GC Root.
+        int retryCount = 3;
 
-    Objet éligible à la collecte =
-    objet qui n’est plus accessible depuis aucune GC Root et dont la mémoire
-    pourra être récupérée lors d’une future collecte.
+    1. Est-ce que le type final de retryCount est différent ?
 
+    Non. Dans les deux cas, retryCount est de type int.
 
-    Rappel principal :
+    2. Est-ce que var apporte ici un gain de performance ?
 
-        type valeur / type référence
-                    ≠
-              stack / heap
+    Non. var ne change pas le type réel de la variable et n'apporte pas
+    de gain de performance particulier dans ce cas.
 
-    "Valeur / référence" décrit principalement la sémantique des types.
+    3. Pourquoi pourrait-on préférer var ?
 
-    "Stack / heap" concerne la manière dont les données sont stockées
-    et utilisées pendant l’exécution.
+    Pour éviter de répéter un type déjà évident et garder un code lisible.
+
+    4. Pourquoi pourrait-on malgré tout préférer int ?
+
+    Parce que le type est immédiatement visible dans le code, ce qui peut être
+    plus explicite selon le contexte ou les conventions de l'équipe.
+*/
+
+/*
+    Partie E — Fais ton propre diagnostic
+
+    Sans exécuter de code, types inférés :
+
+        var warehouseId = 87;          // int
+        var warehouseCode = "WH-87";  // string
+        var available = false;         // bool
+        var sector = 'D';              // char
+        var capacity = 2500L;          // long
+
+    Inférence de type =
+
+    Le compilateur déduit le type d'une variable à partir de sa valeur
+    d'initialisation. Ce type est ensuite fixé à la compilation.
+
+    Rappels :
+
+        var ≠ type dynamique
+        var ≠ object
+        var ≠ absence de type
 */
