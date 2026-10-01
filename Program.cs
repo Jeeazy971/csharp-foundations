@@ -1,85 +1,80 @@
-﻿string rawReference = "  ord_742  ";
-string quantityText = "6";
-string externalPriority = "HIGH";
-
-decimal unitPrice = 14.95m;
-
-int currentStock = 20;
-int reservedItems = 3;
-
-object genericPayload = 150;
-
-string rawTrim = rawReference.Trim();
-string rawReplace = rawTrim.Replace("_", "-");
-string rawReferenceClean = rawReplace.ToUpper();
-const string ValidPrefix = "ORD-";
-bool isExist = rawReferenceClean.StartsWith(ValidPrefix);
-
-int quantityConvert = int.Parse(quantityText);
-
-bool externalPriorityConvert = int.TryParse(externalPriority, out int result);
-
-decimal totalAmount = unitPrice * quantityConvert;
-
-int stockAvailable = currentStock - reservedItems;
-
-bool isStockAvailable = stockAvailable >= quantityConvert;
-
-string? deliveryNotes = null;
-
-bool isNotAvailable = deliveryNotes is null;
-
-bool isInt = genericPayload is int;
-bool isString = genericPayload is string;
-
-var message = $"Order {rawReferenceClean} - Quantity: {quantityConvert} - Available: {isStockAvailable}";
+﻿int severityScore = 7;
+bool equipmentStopped = true;
+bool technicianAvailable = true;
+bool remoteFixAvailable = false;
 
 
+if (severityScore >= 8)
+{
+    Console.WriteLine("Critical incident");
+}
+else if (severityScore >= 5)
+{
+    Console.WriteLine("High incident");
+}
+else
+{
+    Console.WriteLine("Standard incident");
+}
+
+bool interventionIsAuthorized = (severityScore >= 5 || equipmentStopped) && technicianAvailable;
+
+if (interventionIsAuthorized)
+{
+    Console.WriteLine("Intervention authorized");
+}
+else
+{
+    Console.WriteLine("Intervention postponed");
+}
+
+if (remoteFixAvailable)
+{
+    Console.WriteLine("Remote intervention");
+}
+else
+{
+    Console.WriteLine("On-site intervention");
+}
+
+if (equipmentStopped)
+{
+    Console.WriteLine("Production stopped");
+}
 
 /*
+ * 
+ * 1. Pourquoi la classification Critical / High / Standard
+    utilise-t-elle if / else if / else plutôt que trois if indépendants ? 
+        plusieurs if indépendants
+        → chaque condition est testée indépendamment
+        → plusieurs blocs PEUVENT donc être exécutés
 
-// long largeValue = 120L;
-// int smallerValue = (int)largeValue;
+        if / else if / else
+        → dès qu'un cas correspond, les suivants sont ignorés
+        → un seul classement est choisi
 
-// object boxedValue = 25;
+    2. Dans la règle d'autorisation, à quoi servent précisément
+       les parenthèses autour de :
+       severityScore >= 5 || equipmentStopped ?
+        Les parenthèses regroupent :
+        severityScore >= 5 || equipmentStopped
 
-// string firstReference = "ORD-742";
-// string secondReference = firstReference;
-// secondReference = secondReference.Replace("742", "900");
+        pour que ce groupe forme une seule condition booléenne,
+        puis son résultat est combiné avec technicianAvailable grâce à &&.
+ * 
+ * Mini-diagnostics
+    Sans exécuter d’abord, indique en commentaire ce que ce code afficherait et pourquoi :
+    int batteryLevel = 92;
 
+    if (batteryLevel >= 50)
+    {
+        Console.WriteLine("Battery OK");
+    }
+    else if (batteryLevel >= 90)
+    {
+        Console.WriteLine("Battery excellent");
+    }
 
-1. Pourquoi le passage de long vers int nécessite-t-il un cast ? long peut représenter une plage de valeurs plus grande que int. La conversion long -> int peut donc perdre de l'information, 
-	ce qui explique qu'un cast explicite soit nécessaire. Si la valeur dépasse la plage de int, le résultat peut être incorrect en contexte non vérifié.
-   Quel risque général existe ? Le risque c'est que le nombre soit trop gros pour que la conversion se fasse.
-
-2. Que se passe-t-il avec :
-   object boxedValue = 25;
-   sachant que int est un type valeur ? boxedValue est de type object et la valeur contenue est de type int donc il y a un boxing.
-
-3. Après Replace, pourquoi :
-   firstReference  = "ORD-742"
-   secondReference = "ORD-900"
-   ? Car secondReference ne reference plus le même objet de (firstReference), donc c'est une nouvelle reference qui se fait avec replace.  
-
-4. Quelle différence fondamentale entre :
-   int?
-   et
-   string?
-   
-   int est de type valeur avec la possibilité d'etre null alors que string est de type reference mais avec la possibilité d'etre null
-*/
-
-
-
-Console.WriteLine(rawReferenceClean);
-Console.WriteLine(isExist);
-Console.WriteLine(quantityConvert);
-Console.WriteLine(externalPriorityConvert);
-Console.WriteLine(result);
-Console.WriteLine(totalAmount);
-Console.WriteLine(stockAvailable);
-Console.WriteLine(isStockAvailable);
-Console.WriteLine(isNotAvailable);
-Console.WriteLine(isInt);
-Console.WriteLine(isString);
-Console.WriteLine(message);
+    il afficherai "Battery OK" car il atteint jamais la seconde condition, d'ou les plus important au moins importante (niveau chiffre dans cet exemple)
+ */
