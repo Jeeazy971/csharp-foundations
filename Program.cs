@@ -1,52 +1,34 @@
-﻿int currentStock = 18;
-int inboundShipment = 7;
-int reservedItems = 5;
+﻿object genericData = 150;
 
-int availableStock = currentStock + inboundShipment - reservedItems;
+bool isInteger = genericData is int;
+bool isString = genericData is string;
 
-int orderDemand = 12;
-bool isStockSufficient = availableStock >= orderDemand;
+string? deliveryRemainder = null;
 
-bool warehouseOpen = true;
-bool itemBlocked = false;
+bool isNull = deliveryRemainder is null;
+bool isNotNull = deliveryRemainder is not null;
 
-bool canPrepareOrder = warehouseOpen && isStockSufficient && !itemBlocked;
+int quantity = 8;
 
-int totalItems = 23;
-int capacityBox = 5;
+bool isGreaterTo0 = quantity is > 0;
+bool isGreaterOrEqualTo10 = quantity is >= 10;
 
-int boxCompleted = totalItems / capacityBox;
-int remainingItems = totalItems % capacityBox;
-
-int counter = 2;
-counter += 3;
-counter--;
-
-
-// int division = 10 / 3;
-// string code = "10" + "5";
+// object code = "ORD-42";
+// bool isNumber = code is int;
 
 /*
 
-1. Quelle valeur reçoit division et pourquoi ? 1. division reçoit 3, car 10 et 3 sont des int :
-   la division entière conserve le quotient entier.
+1. Quelle valeur recevrait isNumber ? False
 
-2. Quelle valeur reçoit code et pourquoi ? "105" car il concatene deux chaines de caractères
-
-3. Quelle différence entre :
-   =  
-   et
-   ==
-   
-   = est une affectation d'une valeur dans une variable
-   == est une comparaison entre deux valeurs
+2. Est-ce que ce test provoquerait une exception si code
+   contient une string ? Pourquoi ? Non je ne pense pas, car il teste si la valeur correspond au type attendue, donc on regarde ce que la valeur contient
    
 */
 
 
-Console.WriteLine(availableStock);
-Console.WriteLine(isStockSufficient);
-Console.WriteLine(canPrepareOrder);
-Console.WriteLine(boxCompleted);
-Console.WriteLine(remainingItems);
-Console.WriteLine(counter);
+Console.WriteLine(isInteger);
+Console.WriteLine(isString);
+Console.WriteLine(isNull);
+Console.WriteLine(isNotNull);
+Console.WriteLine(isGreaterTo0);
+Console.WriteLine(isGreaterOrEqualTo10);
