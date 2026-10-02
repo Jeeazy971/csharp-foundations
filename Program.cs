@@ -1,57 +1,74 @@
-﻿int processedCount = 0;
-int totalScore = 0;
+﻿string eventStream = "SSWESS";
 
-for (int checkpoint = 1; checkpoint <= 6; checkpoint++)
+int processedCount = 0;
+int successCount = 0;
+bool errorFound = false;
+
+foreach (char evnt in eventStream)
 {
-    Console.WriteLine($"Checkpoint {checkpoint}");
+    Console.WriteLine($"Event: {evnt}");
 
     processedCount++;
 
-    totalScore += checkpoint * 2;
-
-    if (checkpoint == 4)
+    if (evnt == 'S')
     {
-        Console.WriteLine("Critical deviation");
+        successCount++;
+    }
+
+    if(evnt == 'E')
+    {
+        errorFound = true;
+        Console.WriteLine("Critical error detected");
         break;
     }
 }
 
 Console.WriteLine($"Processed: {processedCount}");
-Console.WriteLine($"Total score: {totalScore}");
+Console.WriteLine($"Successes: {successCount}");
+Console.WriteLine($"Error found: {errorFound}");
 
 
 /*
-1.Pourquoi utilise - t - on checkpoint <= 6
-   et non checkpoint < 6 ? car si on ne met pas <= ce sera false car on veut savoir si 6 <= 6 et non 6 strcitement < a 6
+1.Dans :
+   foreach (char currentEvent in eventStream)
 
-2. Quelle différence y a-t-il entre checkpoint
-   et processedCount ? checkpoint controle la boucle, proccessedCount incremente le nombre de fois que le processus tourne
+    quelle différence y a-t - il entre
+   currentEvent et eventStream ? currentEvent est la variable interne a la boucle initialisé qui contient chaque caractère. et eventStream la variable externe qui contient le mot en question.
 
-3. Pourquoi totalScore est-il appelé un accumulateur ? Car il accumule comme le nom dit la valeur ajouté
+2. Pourquoi n'écrit-on pas currentEvent++ pour passer à l'élément suivant ?
 
-4. Quand checkpoint vaut 4, que fait précisément break ? il s'arrete et sort de la boucle
-   Est-ce que le programme entier s'arrête ? Non juste la boucle concerné
+    Parce que dans un foreach, c'est C# qui gère automatiquement le passage à l'élément suivant.
+    La variable currentEvent représente seulement l'élément courant, elle ne sert pas à contrôler la progression de la boucle.
+
+3. processedCount est-il nécessaire au fonctionnement
+   du foreach lui-même ? À quoi sert-il réellement ici ? 
+    Non absolument pas, il mesure sle nombre total d’événements réellement traités avant l’arrêt.
+
+4. Quand break est exécuté sur 'E',
+    que deviennent les caractères restants ? elle ne sont pas lue tout simplement, si on voulait les lires également on enlève le break ajouté
 */
 
 /*
- * Mini-diagnostic — avant exécution
-Ajoute également ceci en commentaire :
-for (int number = 2; number <= 8; number += 2)
+ Mini-diagnostic — avant exécution
+Ajoute ce code dans un commentaire :
+string flags = "ABCA";
+
+foreach (char flag in flags)
 {
-    Console.WriteLine(number);
+    if (flag == 'C')
+    {
+        break;
+    }
+
+    Console.WriteLine(flag);
 }
 
 Sans l’exécuter d’abord, réponds :
-1.Quelles valeurs seront affichées ? 2 4 6 8
+1. Quelles valeurs seront affichées ? A et B
 
-2. Combien d'itérations seront exécutées ? 4
+2. Est-ce que C sera affiché ? Non
 
-3. Quelle est :
-   -l'initialisation ? int number = 2
-   - la condition ? number <= 8
-   -l'évolution ? number += 2
+3. Pourquoi ? Car le break quitte la boucle avant de l'afficher
 
-4.Après avoir affiché la dernière valeur,
-   quelle sera la valeur suivante de number
-   avant que la condition devienne false ? 10 <= 8 = false donc elle n'est pas affiché
+4. Est-ce que le dernier A sera traité ? Non
 */
