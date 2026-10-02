@@ -1,63 +1,57 @@
-﻿string rawExportFormat = "  csv ";
-int priorityCode = 2;
+﻿int processedCount = 0;
+int totalScore = 0;
 
-string cleanExportFormat = rawExportFormat.Trim().ToUpper();
-
-string fileExtension = cleanExportFormat switch
+for (int checkpoint = 1; checkpoint <= 6; checkpoint++)
 {
-   "CSV" => ".csv",
-   "JSON" => ".json",
-   "XML"  => ".xml",
-   _ => ".txt"
-};
+    Console.WriteLine($"Checkpoint {checkpoint}");
 
-int retentionDays = priorityCode switch
-{
-    1 => 7,
-    2 => 30,
-    3 => 90,
-    _ => 1
-};
+    processedCount++;
+
+    totalScore += checkpoint * 2;
+
+    if (checkpoint == 4)
+    {
+        Console.WriteLine("Critical deviation");
+        break;
+    }
+}
+
+Console.WriteLine($"Processed: {processedCount}");
+Console.WriteLine($"Total score: {totalScore}");
 
 
-Console.WriteLine(fileExtension);
-Console.WriteLine(retentionDays);
-
-//Questions en commentaire
-//Réponds avec tes propres mots :
-//1.Pourquoi n'avons-nous pas besoin d'initialiser fileExtension à null
-//   avant le switch expression ? Car dans switch expression, la variable obtient dejà la valeur du switch
-
-//2. Que signifie => dans une branche du switch expression ? obtenir, ou deviens
-
-//3. Quel est le rôle de _ ? il est comme default dans le switch classique
-
-//4. Quelle différence principale vois-tu entre :
-//   switch classique 
-//   et
-//   switch expression ? 
-// switch classique
 /*
- * → choisit des instructions / actions à exécuter
+1.Pourquoi utilise - t - on checkpoint <= 6
+   et non checkpoint < 6 ? car si on ne met pas <= ce sera false car on veut savoir si 6 <= 6 et non 6 strcitement < a 6
 
-   switch expression
-   → choisit une valeur à produire
+2. Quelle différence y a-t-il entre checkpoint
+   et processedCount ? checkpoint controle la boucle, proccessedCount incremente le nombre de fois que le processus tourne
+
+3. Pourquoi totalScore est-il appelé un accumulateur ? Car il accumule comme le nom dit la valeur ajouté
+
+4. Quand checkpoint vaut 4, que fait précisément break ? il s'arrete et sort de la boucle
+   Est-ce que le programme entier s'arrête ? Non juste la boucle concerné
 */
 
-//Mini-diagnostic — prédiction avant exécution
-//Ajoute ce code dans un commentaire, ne l’exécute pas avant d’avoir répondu :
-//string deviceType = "TABLET";
+/*
+ * Mini-diagnostic — avant exécution
+Ajoute également ceci en commentaire :
+for (int number = 2; number <= 8; number += 2)
+{
+    Console.WriteLine(number);
+}
 
-//string interfaceMode = deviceType switch
-//{
-//    "DESKTOP" => "Wide",
-//    "MOBILE" => "Compact",
-//    _ => "Standard"
-//};
+Sans l’exécuter d’abord, réponds :
+1.Quelles valeurs seront affichées ? 2 4 6 8
 
-//Console.WriteLine(interfaceMode);
+2. Combien d'itérations seront exécutées ? 4
 
-//Indique:
-//Qu'est-ce qui sera affiché ? Standard
-//Pourquoi? Car aucuns cas ne correspondais
-//Quelle branche produit finalement la valeur ? La branche _ => "Standard" produit finalement la valeur.
+3. Quelle est :
+   -l'initialisation ? int number = 2
+   - la condition ? number <= 8
+   -l'évolution ? number += 2
+
+4.Après avoir affiché la dernière valeur,
+   quelle sera la valeur suivante de number
+   avant que la condition devienne false ? 10 <= 8 = false donc elle n'est pas affiché
+*/
