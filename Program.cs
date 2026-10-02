@@ -1,90 +1,63 @@
-﻿string rawDeliveryMode = "  pickup ";
-int packageCount = 3;
+﻿string rawExportFormat = "  csv ";
+int priorityCode = 2;
 
-string cleanDeliveryMode = rawDeliveryMode.ToUpper().Trim();
+string cleanExportFormat = rawExportFormat.Trim().ToUpper();
 
-string? deliveryMessage = null;
-
-switch (cleanDeliveryMode)
+string fileExtension = cleanExportFormat switch
 {
-	case "HOME":
-		deliveryMessage = "Home delivery";
-		break;
+   "CSV" => ".csv",
+   "JSON" => ".json",
+   "XML"  => ".xml",
+   _ => ".txt"
+};
 
-	case "PICKUP":
-		deliveryMessage = "Store pickup";
-		break;
-
-	case "LOCKER":
-		deliveryMessage = "Locker delivery";
-		break;
-
-    default:
-		deliveryMessage = "Unknown delivery mode";
-        break;
-}
-
-string? packageType = null;
-
-switch (packageCount)
+int retentionDays = priorityCode switch
 {
-    case 1:
-        packageType = "Single package";
-        break;
+    1 => 7,
+    2 => 30,
+    3 => 90,
+    _ => 1
+};
 
-    case 2:
-    case 3:
-        packageType = "Small shipment";
-        break;
 
-    default:
-        packageType = "Large shipment";
-        break;
-}
+Console.WriteLine(fileExtension);
+Console.WriteLine(retentionDays);
 
-Console.WriteLine(deliveryMessage);
-Console.WriteLine(packageType);
+//Questions en commentaire
+//Réponds avec tes propres mots :
+//1.Pourquoi n'avons-nous pas besoin d'initialiser fileExtension à null
+//   avant le switch expression ? Car dans switch expression, la variable obtient dejà la valeur du switch
 
+//2. Que signifie => dans une branche du switch expression ? obtenir, ou deviens
+
+//3. Quel est le rôle de _ ? il est comme default dans le switch classique
+
+//4. Quelle différence principale vois-tu entre :
+//   switch classique 
+//   et
+//   switch expression ? 
+// switch classique
 /*
- * 
- * 
- * 
- * Question 1
-    Pourquoi le premier problème est-il un bon candidat pour switch plutôt qu’une longue chaîne de if / else if ?
-    Oui c'est mieux pour notre premier problème car ça une meilleure lisibilité, de plus on recherche le match exact donc il repond bien à notre besoin.
-    Question 2
-    Dans :
-    case 2:
-    case 3:
-        ...
-        break;
+ * → choisit des instructions / actions à exécuter
 
-    pourquoi n’avons-nous besoin d’écrire le traitement qu’une seule fois ?
-    2 et 3 sont deux valeurs exactes distinctes qui conduisent au même bloc de traitement.
-    Question 3
-    Quel est le rôle de default ?
-    Son rôle est prendre le relais si aucun cas ne correspond au précédentes valeurs verifié.
- *
- *  Mini-diagnostic — à répondre avant d’exécuter
-    Ajoute également ta réponse en commentaire :
-    string accessLevel = "ADMIN";
+   switch expression
+   → choisit une valeur à produire
+*/
 
-    switch (accessLevel)
-    {
-        case "USER":
-            Console.WriteLine("Standard access");
-            break;
+//Mini-diagnostic — prédiction avant exécution
+//Ajoute ce code dans un commentaire, ne l’exécute pas avant d’avoir répondu :
+//string deviceType = "TABLET";
 
-        case "ADMIN":
-            Console.WriteLine("Administrator access");
-            break;
+//string interfaceMode = deviceType switch
+//{
+//    "DESKTOP" => "Wide",
+//    "MOBILE" => "Compact",
+//    _ => "Standard"
+//};
 
-        default:
-            Console.WriteLine("Unknown access");
-            break;
-    }
+//Console.WriteLine(interfaceMode);
 
-    Qu'est-ce qui sera affiché ? "Administrator access"
-    Quels case sont comparés ? case "USER": et case "ADMIN"
-    Est-ce que default sera exécuté ? Non, car le second cas ADMIN correspond
- */
+//Indique:
+//Qu'est-ce qui sera affiché ? Standard
+//Pourquoi? Car aucuns cas ne correspondais
+//Quelle branche produit finalement la valeur ? La branche _ => "Standard" produit finalement la valeur.
