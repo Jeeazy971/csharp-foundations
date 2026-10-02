@@ -1,80 +1,90 @@
-﻿int severityScore = 7;
-bool equipmentStopped = true;
-bool technicianAvailable = true;
-bool remoteFixAvailable = false;
+﻿string rawDeliveryMode = "  pickup ";
+int packageCount = 3;
 
+string cleanDeliveryMode = rawDeliveryMode.ToUpper().Trim();
 
-if (severityScore >= 8)
-{
-    Console.WriteLine("Critical incident");
-}
-else if (severityScore >= 5)
-{
-    Console.WriteLine("High incident");
-}
-else
-{
-    Console.WriteLine("Standard incident");
-}
+string? deliveryMessage = null;
 
-bool interventionIsAuthorized = (severityScore >= 5 || equipmentStopped) && technicianAvailable;
+switch (cleanDeliveryMode)
+{
+	case "HOME":
+		deliveryMessage = "Home delivery";
+		break;
 
-if (interventionIsAuthorized)
-{
-    Console.WriteLine("Intervention authorized");
-}
-else
-{
-    Console.WriteLine("Intervention postponed");
+	case "PICKUP":
+		deliveryMessage = "Store pickup";
+		break;
+
+	case "LOCKER":
+		deliveryMessage = "Locker delivery";
+		break;
+
+    default:
+		deliveryMessage = "Unknown delivery mode";
+        break;
 }
 
-if (remoteFixAvailable)
+string? packageType = null;
+
+switch (packageCount)
 {
-    Console.WriteLine("Remote intervention");
-}
-else
-{
-    Console.WriteLine("On-site intervention");
+    case 1:
+        packageType = "Single package";
+        break;
+
+    case 2:
+    case 3:
+        packageType = "Small shipment";
+        break;
+
+    default:
+        packageType = "Large shipment";
+        break;
 }
 
-if (equipmentStopped)
-{
-    Console.WriteLine("Production stopped");
-}
+Console.WriteLine(deliveryMessage);
+Console.WriteLine(packageType);
 
 /*
  * 
- * 1. Pourquoi la classification Critical / High / Standard
-    utilise-t-elle if / else if / else plutôt que trois if indépendants ? 
-        plusieurs if indépendants
-        → chaque condition est testée indépendamment
-        → plusieurs blocs PEUVENT donc être exécutés
-
-        if / else if / else
-        → dès qu'un cas correspond, les suivants sont ignorés
-        → un seul classement est choisi
-
-    2. Dans la règle d'autorisation, à quoi servent précisément
-       les parenthèses autour de :
-       severityScore >= 5 || equipmentStopped ?
-        Les parenthèses regroupent :
-        severityScore >= 5 || equipmentStopped
-
-        pour que ce groupe forme une seule condition booléenne,
-        puis son résultat est combiné avec technicianAvailable grâce à &&.
  * 
- * Mini-diagnostics
-    Sans exécuter d’abord, indique en commentaire ce que ce code afficherait et pourquoi :
-    int batteryLevel = 92;
+ * 
+ * Question 1
+    Pourquoi le premier problème est-il un bon candidat pour switch plutôt qu’une longue chaîne de if / else if ?
+    Oui c'est mieux pour notre premier problème car ça une meilleure lisibilité, de plus on recherche le match exact donc il repond bien à notre besoin.
+    Question 2
+    Dans :
+    case 2:
+    case 3:
+        ...
+        break;
 
-    if (batteryLevel >= 50)
+    pourquoi n’avons-nous besoin d’écrire le traitement qu’une seule fois ?
+    2 et 3 sont deux valeurs exactes distinctes qui conduisent au même bloc de traitement.
+    Question 3
+    Quel est le rôle de default ?
+    Son rôle est prendre le relais si aucun cas ne correspond au précédentes valeurs verifié.
+ *
+ *  Mini-diagnostic — à répondre avant d’exécuter
+    Ajoute également ta réponse en commentaire :
+    string accessLevel = "ADMIN";
+
+    switch (accessLevel)
     {
-        Console.WriteLine("Battery OK");
-    }
-    else if (batteryLevel >= 90)
-    {
-        Console.WriteLine("Battery excellent");
+        case "USER":
+            Console.WriteLine("Standard access");
+            break;
+
+        case "ADMIN":
+            Console.WriteLine("Administrator access");
+            break;
+
+        default:
+            Console.WriteLine("Unknown access");
+            break;
     }
 
-    il afficherai "Battery OK" car il atteint jamais la seconde condition, d'ou les plus important au moins importante (niveau chiffre dans cet exemple)
+    Qu'est-ce qui sera affiché ? "Administrator access"
+    Quels case sont comparés ? case "USER": et case "ADMIN"
+    Est-ce que default sera exécuté ? Non, car le second cas ADMIN correspond
  */
