@@ -1,89 +1,98 @@
-﻿int remainingPackets = 5;
-int processedCount = 0;
-bool gatewayOnline = true;
+﻿
 
+Console.WriteLine("Audit started");
+DisplaySeparator();
+RunEquipmentCheck();
+DisplaySeparator();
+Console.WriteLine("Audit completed");
 
-while (remainingPackets >= 1 && gatewayOnline)
+static void DisplaySeparator()
 {
-    Console.WriteLine($"Processing packet {processedCount + 1}");
+    Console.WriteLine("----------");
+}
 
-    processedCount++;
-
-    remainingPackets--;
-
-    if (processedCount == 3)
+static void RunEquipmentCheck()
+{
+    for (int check = 1; check <= 3; check++)
     {
-        gatewayOnline = false;
-        Console.WriteLine("Gateway offline");
+        if (check == 1)
+        {
+            Console.WriteLine($"Check {check}: OK");
+        }
+        else if (check == 2)
+        {
+            Console.WriteLine($"Check {check}: Warning");
+        }
+        else
+        {
+            Console.WriteLine($"Check {check}: OK");
+        }
     }
 }
 
-Console.WriteLine($"Processed: {processedCount}");
-Console.WriteLine($"Remaining: {remainingPackets}");
-Console.WriteLine($"Gateway online: {gatewayOnline}");
+/*
+1.Quelle différence y a - t - il entre :
 
+   DisplaySeparator
 
-/*1.Pourquoi while est - il plus naturel ici qu'un for ? Car avec la condition de while c'est plus evident de verifier tant que quelque est vrai
-
-2. Quelles sont les deux conditions qui doivent être vraies
-   pour entrer dans une nouvelle itération ?
-    remainingPackets >= 1
-    ET
-    gatewayOnline == true
-
-3. Quand gatewayOnline devient false,
-   est-ce que le programme quitte immédiatement le bloc en cours ? Non
-   Que se passe-t-il exactement ? Il fini sont traitement puis il reverifie la condition si elle est toujours, vrai et vu que ce n'est plus le cas il ne rentre plus dazns la boucle
-
-4. Quelle différence y a-t-il entre :
-   processedCount
    et
-   remainingPackets ? processedCount compte le nombre d'iteration et remainingPackets decremente le nombre packets due a la condition while pour verifier s'il est encore vrai
 
-5. Qu'est-ce qui garantit ici que la boucle ne tourne pas indéfiniment ? 
-    remainingPackets passe sous 1
-    OU
-    gatewayOnline devient false
+   DisplaySeparator() ?
+
+    La première et désigne la methode et son nom et la seconde avec les parentheses elle appelle la méthode et execute son corps.
+
+2. Pourquoi le code contenu dans RunEquipmentCheck
+   ne s'exécute-t-il pas simplement parce que la méthode existe ? Car il faut l'appeler avec les parentheses, chose que l'on ne fait pas.
+
+3. Que signifie void ici ? que la methode ne retourne aucune valeur, mais elle peut afficher par exemple quelque chose
+
+4. Pourquoi DisplaySeparator est-elle intéressante à réutiliser
+   plutôt que d'écrire deux fois Console.WriteLine("----------") ? Car elle est reutilisable et on evite le DRY (Don't repeat Yourself) même si je ne le connait pas par coeur.
+
+5. Dans RunEquipmentCheck, quel est le rôle de la méthode
+   par rapport au for et au if qu'elle contient ? 
+    RunEquipmentCheck()
+    → regroupe et donne un nom au traitement complet
+
+    for
+    → répète les 3 contrôles
+
+    if / else
+    → décide quel résultat afficher pour chaque contrôle
+
 */
 
-/*
-Mini - diagnostic 1 — zéro itération
-Ajoute ceci en commentaire :
-int remainingFiles = 0;
-
-while (remainingFiles > 0)
-{
-    Console.WriteLine("Processing file");
-    remainingFiles--;
-}
-
-Console.WriteLine("Finished");
-
-Sans exécuter, réponds :
-1.Combien de fois "Processing file" sera affiché ? 0
-
-2. Est-ce que "Finished" sera affiché ? oui
-
-3. Pourquoi ? Il ne rentre pas dans la boucle donc il passe a la seconde instruction
-
- */
-
 
 /*
-Mini - diagnostic 2 — repérer une boucle infinie
-Toujours en commentaire :
-int retries = 1;
+ * 
+Console.WriteLine("A");
 
-while (retries <= 3)
+Second();
+
+Console.WriteLine("D");
+
+static void Second()
 {
-    Console.WriteLine(retries);
+    Console.WriteLine("B");
+    Third();
 }
 
-Réponds:
-1.Quel est le problème ? retries n'incremente jamais donc la valeur ne change pas pour la condition booleene
+static void Third()
+{
+    Console.WriteLine("C");
+}
+*/
 
-2. Pourquoi la condition reste-t-elle vraie ? Parce que la valeur de retries ne change pas
 
-3. Quelle partie manque pour permettre à la boucle
-   d'atteindre naturellement sa fin ? retries++
+/*
+1.Quel sera l'ordre exact d'affichage ? A, B, C, D
+
+2. Quand Third() se termine,
+   où reprend l'exécution ? 
+    Quand Third() se termine, l'exécution revient dans Second() juste après l'appel Third();
+    Comme il n'y a plus rien ensuite dans Second(), Second() se termine à son tour.
+
+3. Quand Second() se termine,
+   où reprend l'exécution ? Quand Second() se termine, l'exécution reprend dans le programme principal,
+    juste après l'appel Second(), donc sur Console.WriteLine("D").
 */
