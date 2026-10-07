@@ -4,84 +4,102 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        int availableOperators = 6;
-        string rawSeverity = " critical ";
-        decimal latencyMs = 182.5m;
-        int waitingMinutes = 18;
+       int requestCount = 6;
+       int slowLimit = 20;
+       int criticalLimit = 30;
 
-        Console.WriteLine("Network monitoring started");
-
-        DisplayIncidentReference(1042);
-        DisplayIncidentReference("NET-1042");
-        bool hasSeverity = TryNormalizeSeverity(rawSeverity, out string normalizedSeverity);
-        Console.WriteLine($"Severity parsing: {hasSeverity} - {normalizedSeverity}");
-        Console.WriteLine($"Operators before: {availableOperators}");
-        bool isAssign = AssignOperator(ref availableOperators);
-        Console.WriteLine($"Assignment: {isAssign}");
-        Console.WriteLine($"Operators after: {availableOperators}");
-        string getStatus = GetEscalationStatus(waitingMinutes);
-        string getSecondStatus = GetEscalationStatus(waitingMinutes, 22);
-        Console.WriteLine($"Default threshold: {getStatus}");
-        Console.WriteLine($"Custom threshold: {getSecondStatus}");
-        DisplayLatency(latencyMs);
-        Console.WriteLine("Network monitoring completed");
-
-
+        AnalyzeRequests(requestCount, slowLimit, criticalLimit);
 
     }
-    static string GetEscalationStatus(int numberOfMinutesWaitTimes, int limitWait = 15)
+
+    static int GetProcessingTime(int numberAsk)
     {
-        if (numberOfMinutesWaitTimes > limitWait)
+        int getTime = numberAsk switch
         {
-            return "Escalate";
-        }
-        
-        return "Within limit";
+            1 => 12,
+            2 => 18,
+            3 => 9,
+            4 => 31,
+            5 => 22,
+            6 => 14,
+            _ => 0
+        };
+
+        return getTime;
     }
 
-    static void DisplayIncidentReference(int reference)
+    static bool IsValidRequestCount(int requestCount)
     {
-        Console.WriteLine($"Incident #{reference}");
-    }
-
-    static void DisplayIncidentReference(string reference)
-    {
-        Console.WriteLine($"Incident {reference}");
-    }
-
-
-    static bool TryNormalizeSeverity(string value, out string newValue)
-    {
-        string cleanValue = value.Trim().ToUpper();
-        bool containsValue = cleanValue == "NORMAL" ||
-                                cleanValue == "WARNING" ||
-                                cleanValue == "CRITICAL";
-
-        if (containsValue)
+        if (requestCount > 0)
         {
-            newValue = cleanValue;
             return true;
         }
         else
         {
-            newValue = "UNKNOWN";
             return false;
         }
     }
 
-    static bool AssignOperator(ref int availableOperator)
+    static int CountSlowRequests(int requestCount, int slowLimit)
     {
-        if (availableOperator > 0)
+        int count = 0;
+
+        for (int i = 1; i <= requestCount; i++)
         {
-            availableOperator--;
-            return true;
+            if (GetProcessingTime(i) > slowLimit)
+            {
+                count++;
+            }
         }
 
-        return false;
+        return count;
     }
 
-    static void DisplayLatency(in decimal latencyMs)
+    static int CalculateTotalProcessingTime(int requestCount)
     {
-        Console.WriteLine($"Latency: {latencyMs} ms");
+        int totalTime = 0;
+
+        for (int i = 1; i <= requestCount; i++)
+        {
+            int processingTime = GetProcessingTime(i);
+            totalTime += processingTime;
+        }
+
+        return totalTime;
+    }
+
+    static int FindFirstCriticalRequest(int requestCount, int criticalLimit)
+    {
+        for (int i = 1; i <= requestCount; i++)
+        {
+            int askTime = GetProcessingTime(i);
+
+            if (askTime > criticalLimit)
+            {
+                return i;
+            }
+        }
+
+        return 0;
+    }
+
+    static void AnalyzeRequests(int requestCount, int slowLimit, int criticalLimit)
+    {
+        if (!IsValidRequestCount(requestCount))
+        {
+            Console.WriteLine("Invalid request count");
+            return;
+        }
+
+        Console.WriteLine("Processing audit started");
+        int countSlowRequests = CountSlowRequests(requestCount, slowLimit);
+        Console.WriteLine($"Requests analyzed: {requestCount}");
+        Console.WriteLine($"Slow requests: {countSlowRequests}");
+        int calculateTotalProcessing = CalculateTotalProcessingTime(requestCount);
+        Console.WriteLine($"Total processing time: {calculateTotalProcessing} s");
+        int findFirstCritical = FindFirstCriticalRequest(requestCount, criticalLimit);
+        Console.WriteLine($"First critical request: #{findFirstCritical}");
+        Console.WriteLine("Processing audit completed");
+        
     }
 }
