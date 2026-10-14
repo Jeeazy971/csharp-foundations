@@ -3,27 +3,27 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        int commandeA = CalculerPieces(4, 6);
-        int commandeB = CalculerPieces(
-                        reserve: 5,
-                        nombreKits: 3,
-                        piecesParKit: 8
-                    );
+        int employeA = CalculerScore(7);
 
-        AfficherCommandes(commandeA: commandeA, commandeB: commandeB);
+        int employeB = CalculerScore(
+            colisTraites: 9,
+            bonus: 6
+        );
+
+        AfficherScores(employeA, employeB);
     }
 
-    static int CalculerPieces(int nombreKits, 
-        int piecesParKit, 
-        int reserve = 0)
+    static int CalculerScore(int colisTraites)
+        => colisTraites * 4;
+
+    static int CalculerScore(int colisTraites, int bonus)
     {
-        return nombreKits * piecesParKit + reserve;
+        return CalculerScore(colisTraites) + bonus;
     }
 
-
-    static void AfficherCommandes(int commandeA, int commandeB)
+    static void AfficherScores(int scoreA, int scoreB)
     {
-        Console.WriteLine($"Commande A : {commandeA} pièces");
-        Console.WriteLine($"Commande B : {commandeB} pièces");
+        Console.WriteLine($"Employé A : {scoreA} points");
+        Console.WriteLine($"Employé B : {scoreB} points");
     }
 }
