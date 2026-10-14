@@ -1,30 +1,19 @@
 ﻿
-
 public class Program
 {
     public static void Main(string[] args)
     {
-        int sousTotal = CalculerSousTotal(3, 12);
-        int total = CalculerTotal(sousTotal, 5);
-        AfficherCommande(sousTotal, total);
-
+        int restantes = CalculerPlacesRestantes(40, 9);
+        AfficherPlaces(restantes);
     }
-    
-    static int CalculerSousTotal(int quantite, int prixUnitaire)
+
+    static int CalculerPlacesRestantes(int capacite, int reservees)
     {
-        return quantite * prixUnitaire;
+        return capacite - reservees;
     }
 
-    static int CalculerTotal(int sousTotal, int livraison)
+    static void AfficherPlaces(int nombre)
     {
-        return sousTotal + livraison;
+        Console.WriteLine($"Places restantes : {nombre}");
     }
-
-
-    static void AfficherCommande(int sousTotal, int total)
-    {
-        Console.WriteLine($"Sous-total : {sousTotal} €");
-        Console.WriteLine($"Total avec livraison : {total} €");
-    }
-
 }
