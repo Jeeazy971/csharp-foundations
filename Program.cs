@@ -3,17 +3,27 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        int restantes = CalculerPlacesRestantes(40, 9);
-        AfficherPlaces(restantes);
+        int commandeA = CalculerPieces(4, 6);
+        int commandeB = CalculerPieces(
+                        reserve: 5,
+                        nombreKits: 3,
+                        piecesParKit: 8
+                    );
+
+        AfficherCommandes(commandeA: commandeA, commandeB: commandeB);
     }
 
-    static int CalculerPlacesRestantes(int capacite, int reservees)
+    static int CalculerPieces(int nombreKits, 
+        int piecesParKit, 
+        int reserve = 0)
     {
-        return capacite - reservees;
+        return nombreKits * piecesParKit + reserve;
     }
 
-    static void AfficherPlaces(int nombre)
+
+    static void AfficherCommandes(int commandeA, int commandeB)
     {
-        Console.WriteLine($"Places restantes : {nombre}");
+        Console.WriteLine($"Commande A : {commandeA} pièces");
+        Console.WriteLine($"Commande B : {commandeB} pièces");
     }
 }
