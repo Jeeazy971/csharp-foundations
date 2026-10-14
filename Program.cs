@@ -3,27 +3,16 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        int employeA = CalculerScore(7);
+        int standard = CalculerDuree(3);
+        int avecControle = CalculerDuree(4, 5);
 
-        int employeB = CalculerScore(
-            colisTraites: 9,
-            bonus: 6
-        );
-
-        AfficherScores(employeA, employeB);
+        Console.WriteLine($"Standard : {standard} minutes");
+        Console.WriteLine($"Avec contrôle : {avecControle} minutes");
     }
 
-    static int CalculerScore(int colisTraites)
-        => colisTraites * 4;
+    static int CalculerDuree(int nombreDossiers)
+        => nombreDossiers * 7;
 
-    static int CalculerScore(int colisTraites, int bonus)
-    {
-        return CalculerScore(colisTraites) + bonus;
-    }
-
-    static void AfficherScores(int scoreA, int scoreB)
-    {
-        Console.WriteLine($"Employé A : {scoreA} points");
-        Console.WriteLine($"Employé B : {scoreB} points");
-    }
+    static int CalculerDuree(int nombreDossiers, int minutesControle)
+        => CalculerDuree(nombreDossiers) + minutesControle;
 }
