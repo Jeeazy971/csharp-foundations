@@ -4,15 +4,27 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        int distanceParcourue = CalculerDistance(4, 350);
-        Console.WriteLine($"Distance parcourue : {distanceParcourue} mètres");
+        int sousTotal = CalculerSousTotal(3, 12);
+        int total = CalculerTotal(sousTotal, 5);
+        AfficherCommande(sousTotal, total);
 
     }
     
-    static int CalculerDistance(int nombreTours, int metresParTour)
+    static int CalculerSousTotal(int quantite, int prixUnitaire)
     {
-        int totalDistance = metresParTour * nombreTours;
-        return totalDistance;
+        return quantite * prixUnitaire;
     }
-    
+
+    static int CalculerTotal(int sousTotal, int livraison)
+    {
+        return sousTotal + livraison;
+    }
+
+
+    static void AfficherCommande(int sousTotal, int total)
+    {
+        Console.WriteLine($"Sous-total : {sousTotal} €");
+        Console.WriteLine($"Total avec livraison : {total} €");
+    }
+
 }
