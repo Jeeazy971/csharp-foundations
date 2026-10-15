@@ -3,16 +3,29 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        int standard = CalculerDuree(3);
-        int avecControle = CalculerDuree(4, 5);
+        int nombrePieces = 6;
+        int grammesParPiece = 14;
+        int minutesParPiece = 9;
 
-        Console.WriteLine($"Standard : {standard} minutes");
-        Console.WriteLine($"Avec contrôle : {avecControle} minutes");
+        var production = CalculerProduction(
+            nombrePieces,
+            grammesParPiece,
+            minutesParPiece
+        );
+
+        Console.WriteLine($"Production : {nombrePieces} pièces");
+        Console.WriteLine($"Matériau nécessaire : {production.grammesTotaux} grammes");
+        Console.WriteLine($"Temps total d'impression : {production.minutesTotales} minutes");
     }
 
-    static int CalculerDuree(int nombreDossiers)
-        => nombreDossiers * 7;
+    static (int grammesTotaux, int minutesTotales) CalculerProduction(
+        int nombrePieces,
+        int grammesParPiece,
+        int minutesParPiece)
+    {
+        int grammesTotaux = nombrePieces * grammesParPiece;
+        int minutesTotales = nombrePieces * minutesParPiece;
 
-    static int CalculerDuree(int nombreDossiers, int minutesControle)
-        => CalculerDuree(nombreDossiers) + minutesControle;
+        return (grammesTotaux, minutesTotales);
+    }
 }
